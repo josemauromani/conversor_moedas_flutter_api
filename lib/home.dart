@@ -60,6 +60,8 @@ class _HomeState extends State<Home> {
                 ),
               );
             } else {
+              dolar = snapshot.data['results']['currencies']['USD']['buy'];
+              euro = snapshot.data['results']['currencies']['EUR']['buy'];
               return SingleChildScrollView(
                 padding: EdgeInsets.all(16.0),
                 child: Column(
