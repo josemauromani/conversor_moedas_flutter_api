@@ -32,7 +32,6 @@ class _HomeState extends State<Home> {
       double real = double.parse(valor);
       dolarController.text = (real / dolar).toStringAsFixed(2);
       euroController.text = (real / euro).toStringAsFixed(2);
-      print(real);
     }
 
     void _dolarCalcula(String valor) {
@@ -84,6 +83,8 @@ class _HomeState extends State<Home> {
                 ),
               );
             } else {
+              print(snapshot.data["results"]["currencies"]);
+              
               dolar = snapshot.data['results']['currencies']['USD']['buy'];
               euro = snapshot.data['results']['currencies']['EUR']['buy'];
 
