@@ -9,26 +9,50 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final realController = TextEditingController();
+  final dolarController = TextEditingController();
+  final euroController = TextEditingController();
+
+  double dolar;
+  double euro;
+
   @override
   Widget build(BuildContext context) {
-    final realController = TextEditingController();
-    final dolarController = TextEditingController();
-    final euroController = TextEditingController();
+    void _limpaCampos() {
+      realController.text = '';
+      dolarController.text = '';
+      euroController.text = '';
+    }
 
-    double dolar;
-    double euro;
-/**
- * falta fazer os calculos
- */
     void _realCalcula(String valor) {
+      if (valor.isEmpty) {
+        _limpaCampos();
+        return;
+      }
       double real = double.parse(valor);
-      dolarController.text = (real/dolar).toStringAsFixed(2);
-      euroController.text = (real/euro).toStringAsFixed(2);
+      dolarController.text = (real / dolar).toStringAsFixed(2);
+      euroController.text = (real / euro).toStringAsFixed(2);
       print(real);
     }
-    void _dolarCalcula(String valor) {}
-    void _euroCalcula(String valor) {
 
+    void _dolarCalcula(String valor) {
+      if (valor.isEmpty) {
+        _limpaCampos();
+        return;
+      }
+      double dolar = double.parse(valor);
+      realController.text = (dolar * this.dolar).toStringAsFixed(2);
+      euroController.text = (dolar * this.dolar / euro).toStringAsFixed(2);
+    }
+
+    void _euroCalcula(String valor) {
+      if (valor.isEmpty) {
+        _limpaCampos();
+        return;
+      }
+      double euro = double.parse(valor);
+      realController.text = (euro * this.euro).toStringAsFixed(2);
+      dolarController.text = (euro * this.euro / dolar).toStringAsFixed(2);
     }
 
     return Scaffold(
@@ -62,6 +86,7 @@ class _HomeState extends State<Home> {
             } else {
               dolar = snapshot.data['results']['currencies']['USD']['buy'];
               euro = snapshot.data['results']['currencies']['EUR']['buy'];
+
               return SingleChildScrollView(
                 padding: EdgeInsets.all(16.0),
                 child: Column(
@@ -74,7 +99,8 @@ class _HomeState extends State<Home> {
                     ),
                     criaCampoTexto('Real', 'R\$', realController, _realCalcula),
                     Divider(),
-                    criaCampoTexto('Dólar', '\$', dolarController, _dolarCalcula),
+                    criaCampoTexto(
+                        'Dólar', '\$', dolarController, _dolarCalcula),
                     Divider(),
                     criaCampoTexto('Euro', '€', euroController, _euroCalcula),
                   ],
@@ -88,7 +114,8 @@ class _HomeState extends State<Home> {
   }
 }
 
-Widget criaCampoTexto(String label, String prefix, TextEditingController controller, Function fcalcula) {
+Widget criaCampoTexto(String label, String prefix,
+    TextEditingController controller, Function fcalcula) {
   return TextField(
     controller: controller,
     style: TextStyle(color: Colors.amber, fontSize: 16),
@@ -99,7 +126,7 @@ Widget criaCampoTexto(String label, String prefix, TextEditingController control
       prefixText: '$prefix  ',
     ),
     onChanged: fcalcula,
-    keyboardType: TextInputType.number,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
   );
 }
 
